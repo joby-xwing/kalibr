@@ -244,7 +244,7 @@ def main():
             #linearSolverOptions.qrTol = 0.0
             
             optimizerOptions = calibrator.estimator.getOptimizerOptions()
-            optimizerOptions.maxIterations = 50
+            optimizerOptions.maxIterations = 500
             optimizerOptions.verbose = parsed.verbose
             verbose = parsed.verbose
         

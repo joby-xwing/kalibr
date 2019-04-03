@@ -679,6 +679,7 @@ def saveChainParametersYaml(cself, resultFile, graph):
 
         #set the data
         P = cam.geometry.projection()
+
         if cameraModel == 'omni':
             camParams.setIntrinsics(cameraModel, [P.xi(), P.fu(), P.fv(), P.cu(), P.cv()] )
         elif cameraModel == 'pinhole':
