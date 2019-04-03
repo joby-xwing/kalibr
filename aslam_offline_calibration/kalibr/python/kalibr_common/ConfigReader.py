@@ -16,8 +16,8 @@ class AslamCamera(object):
             principalPoint = intrinsics[2:4]
             
             if dist_model == 'radtan':
-                dist = cv.RadialTangentialDistortion(dist_coeff[0], dist_coeff[1], 
-                                                     dist_coeff[2], dist_coeff[3])
+                dist = cv.RadialTangentialDistortion(dist_coeff[0], dist_coeff[1], dist_coeff[2],
+                                                     dist_coeff[3], dist_coeff[4])
                 
                 proj = cv.DistortedPinholeProjection(focalLength[0], focalLength[1], 
                                                      principalPoint[0], principalPoint[1], 
@@ -78,8 +78,8 @@ class AslamCamera(object):
             principalPoint = intrinsics[3:5]
             
             if dist_model == 'radtan':
-                dist = cv.RadialTangentialDistortion(dist_coeff[0], dist_coeff[1], 
-                                                         dist_coeff[2], dist_coeff[3])
+                dist = cv.RadialTangentialDistortion(dist_coeff[0], dist_coeff[1], dist_coeff[2],
+                                                         dist_coeff[3], dist_coeff[4])
                 
                 proj = cv.DistortedOmniProjection(xi_omni, focalLength[0], focalLength[1], 
                                                         principalPoint[0], principalPoint[1], 
@@ -336,7 +336,7 @@ class CameraParameters(ParametersBase):
     
     #distortion
     def checkDistortion(self, model, coeffs):
-        distortionModelsAndNumParams = {'radtan': 4,
+        distortionModelsAndNumParams = {'radtan': 5,
                                         'equidistant': 4, 
                                         'fov': 1, 
                                         'none': 0}

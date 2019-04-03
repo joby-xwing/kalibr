@@ -50,11 +50,11 @@ def distortPoint((x,y), distortion_model, distortion_coeffs):
         y2 = y**2
         xy = x * y
         rho2 = x2 + y2
-        rad_dist = distortion_coeffs[0] * rho2 + distortion_coeffs[1] * rho2**2
-        x += x * rad_dist + 2.0 * distortion_coeffs[2] * xy + \
-            distortion_coeffs[3] * (rho2 + 2.0 * x2)
-        y += y * rad_dist + 2.0 * distortion_coeffs[2] * xy + \
-            distortion_coeffs[3] * (rho2 + 2.0 * y2)
+        rad_dist = distortion_coeffs[0] * rho2 + distortion_coeffs[1] * rho2**2 + distortion_coeffs[2] * rho2**3
+        x += x * rad_dist + 2.0 * distortion_coeffs[3] * xy + \
+            distortion_coeffs[4] * (rho2 + 2.0 * x2)
+        y += y * rad_dist + 2.0 * distortion_coeffs[3] * xy + \
+            distortion_coeffs[4] * (rho2 + 2.0 * y2)
         return (x, y) 
     elif distortion_model == "equidistant" or distortion_model == "equi":
         r = math.sqrt(x**2 + y**2)

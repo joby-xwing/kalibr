@@ -27,7 +27,7 @@ TEST(AslamCamerasTestSuite, testDistortedPinholeCameraGeometry)
 {
   using namespace aslam::cameras;
 
-  RadialTangentialDistortion d(-0.2, 0.13, 0.0005, 0.0005);
+  RadialTangentialDistortion d(-0.2, 0.13, 0.0005, 0.0005, 0.0005);
   DistortedPinholeCameraGeometry geometry = DistortedPinholeCameraGeometry::getTestGeometry();
   geometry.projection().distortion() = d;
 
@@ -59,7 +59,7 @@ TEST(AslamCamerasTestSuite, testDistortedPinholeRsCameraGeometry)
 {
   using namespace aslam::cameras;
 
-  RadialTangentialDistortion d(-0.2, 0.13, 0.0005, 0.0005);
+  RadialTangentialDistortion d(-0.2, 0.13, 0.0005, 0.0005, 0.0005);
   DistortedPinholeRsCameraGeometry geometry = DistortedPinholeRsCameraGeometry::getTestGeometry();
   geometry.projection().setDistortion(d);
 

@@ -32,8 +32,8 @@ PinholeCameraGeometry::PinholeCameraGeometry(double focalLengthU,
                                              double imageCenterU,
                                              double imageCenterV,
                                              int resolutionU, int resolutionV,
-                                             double k1, double k2, double p1,
-                                             double p2)
+                                             double k1, double k2, double k3,
+                                             double p1, double p2)
     : _fu(focalLengthU),
       _fv(focalLengthV),
       _cu(imageCenterU),
@@ -42,6 +42,7 @@ PinholeCameraGeometry::PinholeCameraGeometry(double focalLengthU,
       _rv(resolutionV),
       _k1(k1),
       _k2(k2),
+      _k3(k3),
       _p1(p1),
       _p2(p2),
       _enableDistortion(1),
@@ -86,7 +87,7 @@ PinholeCameraGeometry PinholeCameraGeometry::createTestGeometry() {
 }
 
 PinholeCameraGeometry PinholeCameraGeometry::createDistortedTestGeometry() {
-  return PinholeCameraGeometry(400, 400, 320, 240, 640, 480, 0.2, 0.2, 0.2, 0.2);
+  return PinholeCameraGeometry(400, 400, 320, 240, 640, 480, 0.2, 0.2, 0.2, 0.2, 0.2);
 }
 
 /**
@@ -105,7 +106,7 @@ void PinholeCameraGeometry::distortion(double mx_u, double my_u, double *dx_u,
   my2_u = my_u * my_u;
   mxy_u = mx_u * my_u;
   rho2_u = mx2_u + my2_u;
-  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u;
+  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u + _k3 * rho2_u * rho2_u * rho2_u;
   *dx_u = mx_u * rad_dist_u + 2 * _p1 * mxy_u + _p2 * (rho2_u + 2 * mx2_u);
   *dy_u = my_u * rad_dist_u + 2 * _p2 * mxy_u + _p1 * (rho2_u + 2 * my2_u);
 }
@@ -129,16 +130,16 @@ void PinholeCameraGeometry::distortion(double mx_u, double my_u, double *dx_u,
   my2_u = my_u * my_u;
   mxy_u = mx_u * my_u;
   rho2_u = mx2_u + my2_u;
-  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u;
+  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u + _k3 * rho2_u * rho2_u * rho2_u;
   *dx_u = mx_u * rad_dist_u + 2 * _p1 * mxy_u + _p2 * (rho2_u + 2 * mx2_u);
   *dy_u = my_u * rad_dist_u + 2 * _p2 * mxy_u + _p1 * (rho2_u + 2 * my2_u);
 
-  *dxdmx = 1 + rad_dist_u + _k1 * 2 * mx2_u + _k2 * rho2_u * 4 * mx2_u
+  *dxdmx = 1 + rad_dist_u + _k1 * 2 * mx2_u + _k2 * rho2_u * 4 * mx2_u + _k3 * rho2_u * rho2_u * 6 * mx2_u
       + 2 * _p1 * my_u + 6 * _p2 * mx_u;
-  *dydmx = _k1 * 2 * mx_u * my_u + _k2 * 4 * rho2_u * mx_u * my_u
+  *dydmx = _k1 * 2 * mx_u * my_u + _k2 * 4 * rho2_u * mx_u * my_u + _k3 * 6 * rho2_u * rho2_u * mx_u * my_u
       + _p1 * 2 * mx_u + 2 * _p2 * my_u;
   *dxdmy = *dydmx;
-  *dydmy = 1 + rad_dist_u + _k1 * 2 * my2_u + _k2 * rho2_u * 4 * my2_u
+  *dydmy = 1 + rad_dist_u + _k1 * 2 * my2_u + _k2 * rho2_u * 4 * my2_u + _k3 * rho2_u * rho2_u * 6 * my2_u
       + 6 * _p1 * my_u + 2 * _p2 * mx_u;
 }
 
@@ -182,8 +183,9 @@ void PinholeCameraGeometry::setIntrinsicsVectorImplementation(
   _cv = intrinsics(3);
   _k1 = intrinsics(4);
   _k2 = intrinsics(5);
-  _p1 = intrinsics(6);
-  _p2 = intrinsics(7);
+  _k3 = intrinsics(6);
+  _p1 = intrinsics(7);
+  _p2 = intrinsics(8);
   _recip_fu = 1.0 / _fu;
   _recip_fv = 1.0 / _fv;
   _fu_over_fv = _fu / _fv;
@@ -198,8 +200,9 @@ PinholeCameraGeometry::traits_t::intrinsics_t PinholeCameraGeometry::getIntrinsi
   intrinsics(3) = _cv;
   intrinsics(4) = _k1;
   intrinsics(5) = _k2;
-  intrinsics(6) = _p1;
-  intrinsics(7) = _p2;
+  intrinsics(6) = _k3;
+  intrinsics(7) = _p1;
+  intrinsics(8) = _p2;
   return intrinsics;
 }
 
